@@ -16,13 +16,31 @@
 
 database.ref().on("child_added", function(childSnapshot, prevChildKey) {
   	
+	var tFrequency = childSnapshot.val().frequency;
+
+	var firstTime = childSnapshot.val().firstTrainTime;
+
+  	var firstTimeConverted = moment(firstTime, "hh:mm").subtract(1, "years");
+
+  	var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
+
+  	var tRemainder = diffTime % tFrequency;
+
+  	var tMinutesTillTrain = tFrequency - tRemainder;
+
+  	var nextTrain = moment().add(tMinutesTillTrain, "minutes");
+    
+
+    console.log(firstTimeConverted);
+
   	$("#trainTable").append(
   		"<tr><td>" + childSnapshot.val().trainName + "</td>" +
   		"<td>" + childSnapshot.val().destination + "</td>" +
-  		"<td>" + childSnapshot.val().frequency + "</td></tr>");
-  	
-  	
+  		"<td>" + childSnapshot.val().frequency + "</td>" +
+  		"<td>" + moment(nextTrain).format("LT") + "</td>" +
+  		"<td>" + tMinutesTillTrain + "</td></tr>");
 
+	
 
 
   });
