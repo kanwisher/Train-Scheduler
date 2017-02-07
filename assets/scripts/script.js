@@ -1,4 +1,7 @@
-    
+
+
+setInterval(updateAll, 60 * 1000); //update information every 60 seconds
+
 
   // Initialize Firebase
   const config = {
@@ -14,27 +17,40 @@
   let database = firebase.database();
 
 
-database.ref().on("child_added", function(childSnapshot, prevChildKey) {
+
+updateAll(); //display info on initial page load
+
+
+function updateAll(){
+
+$(".trainData").remove(); //remove existing rows since appending
+
+
+  database.ref().on('value', function(snapshot) {
+
+  snapshot.forEach(function(childSnapshot){
+    
   	
-	var tFrequency = childSnapshot.val().frequency;
 
-	var firstTime = childSnapshot.val().firstTrainTime;
+	let tFrequency = childSnapshot.val().frequency;
 
-  	var firstTimeConverted = moment(firstTime, "hh:mm").subtract(1, "years");
+	let firstTime = childSnapshot.val().firstTrainTime;
 
-  	var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
+  let firstTimeConverted = moment(firstTime, "hh:mm").subtract(1, "years");
 
-  	var tRemainder = diffTime % tFrequency;
+  let diffTime = moment().diff(moment(firstTimeConverted), "minutes");
 
-  	var tMinutesTillTrain = tFrequency - tRemainder;
+  let tRemainder = diffTime % tFrequency;
 
-  	var nextTrain = moment().add(tMinutesTillTrain, "minutes");
+  let tMinutesTillTrain = tFrequency - tRemainder;
+
+  let nextTrain = moment().add(tMinutesTillTrain, "minutes");
     
 
-    console.log(firstTimeConverted);
-
+  
+    //for each child, append new row of data
   	$("#trainTable").append(
-  		"<tr><td>" + childSnapshot.val().trainName + "</td>" +
+  		"<tr class='trainData'><td>" + childSnapshot.val().trainName + "</td>" +
   		"<td>" + childSnapshot.val().destination + "</td>" +
   		"<td>" + childSnapshot.val().frequency + "</td>" +
   		"<td>" + moment(nextTrain).format("LT") + "</td>" +
@@ -45,31 +61,37 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey) {
 
   });
 
+});
+}
+
+
+
 
 
   $("#submitTable").on('click', function (){
 
+      //save form input values
   		let tName = $("#inputTrainName").val().trim();
   		let dest = $("#inputDestination").val().trim();
   		let firstTT = $("#inputFirstTrainTime").val().trim();
   		let freq = $("#inputFrequency").val().trim();
 
-  		var newTrain = {
+  		let newTrain = {
   			trainName : tName,
 	  		destination : dest,
 	  		firstTrainTime : firstTT,
 	  		frequency: freq
   		};
 
-	  	database.ref().push(newTrain);
+	  	database.ref().push(newTrain); //push object to FireBase
 
-
-	  	$("#inputTrainName").val("");
+      //clear forms
+	  $("#inputTrainName").val("");
 		$("#inputDestination").val("");
 		$("#inputFirstTrainTime").val("");
 		$("#inputFrequency").val("");
 
-
+    updateAll(); //don't wait for interval, update info now
 
   });
 
