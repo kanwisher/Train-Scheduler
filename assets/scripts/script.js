@@ -22,6 +22,8 @@ var provider = new firebase.auth.GoogleAuthProvider();
 
 
 $('#test').on('click', function(){
+    
+    
 
 firebase.auth().signInWithPopup(provider).then(function(result) {
   // This gives you a Google Access Token. You can use it to access the Google API.
@@ -31,9 +33,15 @@ firebase.auth().signInWithPopup(provider).then(function(result) {
 
   console.log(user);
   
-  loggedIn = true;
-      $('button').show();
-     $('.toggleView').show();
+loggedIn = true;
+      
+     $('.toggleView').show(800);
+     $("#test").hide();
+     $("button").hide();
+     $(".buttonSpace").show(400, function() {
+       $("button").fadeIn(900);
+     });
+     $("#scheduleDiv").append("<span class='small pull-right'>Logged In: " + user.displayName + "</span>")
   // ...
 }).catch(function(error) {
   // Handle Errors here.
@@ -90,9 +98,9 @@ console.log("interval running");
   		"<td>" + moment(nextTrain).format("LT") + "</td>" +
   		"<td>" + tMinutesTillTrain + "</td>" +
       "<td class='buttonSpace'><button type='button' data-key='" + childSnapshot.key + "' class='btn-xs btn-warning update updateStyle'>Update</button><button type='button' data-key='" + childSnapshot.key + "' class='btn-xs btn-danger clear'>Clear</button></td></tr>");
-$("button").hide();
+$(".buttonSpace").hide();
 	if(loggedIn){
-    $("button").show();
+    $(".buttonSpace").show();
   }
 
 
