@@ -46,7 +46,7 @@ body {
 
 #test {
 	display: block;
-	width: 200px
+	width: 200px;
 }
 
 #test:hover {

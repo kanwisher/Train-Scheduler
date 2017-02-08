@@ -1,6 +1,7 @@
 
 
 const timer = window.setInterval(updateAll, 20 * 1000); //update information every 60 seconds
+
 $('.toggleView').hide();
 let loggedIn = false;
   // Initialize Firebase
@@ -20,7 +21,7 @@ var provider = new firebase.auth.GoogleAuthProvider();
 
 
 
-$('#test').on('click', function (){
+$('#test').on('click', function(){
 
 firebase.auth().signInWithPopup(provider).then(function(result) {
   // This gives you a Google Access Token. You can use it to access the Google API.
@@ -45,7 +46,7 @@ firebase.auth().signInWithPopup(provider).then(function(result) {
   // ...
 });
 
-}
+
 });
 
 
