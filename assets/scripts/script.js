@@ -1,10 +1,6 @@
-function startInterval() {
-    timer = window.setInterval(updateAll, 20 * 1000); //update information every 60 seconds
-    console.log("interval started");
-}
 
 
-startInterval();
+let timer = window.setInterval(updateAll, 20 * 1000); //update information every 60 seconds
 $('.toggleView').hide();
 let loggedIn = false;
 
@@ -24,7 +20,7 @@ let database = firebase.database();
 
 var provider = new firebase.auth.GoogleAuthProvider();
 
-
+//GOOGLE LOGIN BUTTON ACTION//
 
 $('#test').on('click', function() {
 
@@ -35,8 +31,6 @@ $('#test').on('click', function() {
         var token = result.credential.accessToken;
         // The signed-in user info.
         var user = result.user;
-
-        console.log(user);
 
         loggedIn = true;
 
@@ -77,7 +71,7 @@ function updateAll() {
 
         snapshot.forEach(function(childSnapshot) {
 
-
+          //Moment JS
 
             let tFrequency = childSnapshot.val().frequency;
 
@@ -103,6 +97,8 @@ function updateAll() {
                 "<td>" + moment(nextTrain).format("LT") + "</td>" +
                 "<td>" + tMinutesTillTrain + "</td>" +
                 "<td class='buttonSpace'><button type='button' data-key='" + childSnapshot.key + "' class='btn-xs btn-warning update updateStyle'>Update</button><button type='button' data-key='" + childSnapshot.key + "' class='btn-xs btn-danger clear'>Clear</button></td></tr>");
+            
+            //Used to hide features until logged in
             $(".buttonSpace").hide();
             if (loggedIn) {
                 $(".buttonSpace").show();
@@ -115,23 +111,24 @@ function updateAll() {
 }
 
 
+//UPDATE button action//
 
 $("#trainTable").on('click', ".update", function() {
-    $(this).text("Confirm");
-    $(this).removeClass('btn-warning update');
-    $(this).addClass('btn-success confirm');
-    let $editables = $(this).closest("tr").children(".edit");
+    $(this).text("Confirm"); //change button text
+    $(this).removeClass('btn-warning update'); //change button style
+    $(this).addClass('btn-success confirm'); //change button style
+    let $editables = $(this).closest("tr").children(".edit"); //grab this row's children with edit class
 
-    $editables.each(function(index) {
-        let currentContent = $(this).text()
-        $(this).text("");
-        let $newInput = $("<input class='tableInput' type='text'/>");
-        $(this).append($newInput.val(currentContent));
+    $editables.each(function(index) { //cycle through each of these items
+        let currentContent = $(this).text() //save text in TD
+        $(this).text(""); //clear text
+        let $newInput = $("<input class='tableInput' type='text'/>");  //create new input box
+        $(this).append($newInput.val(currentContent)); //add saved text to input box (not as placeholder!)
     });
 
-    clearInterval(timer);
-    console.log("interval stopped");
-
+    clearInterval(timer); //stop the table from refreshing while editing
+   
+//Save all new input data to object, then update object in Firebase
     $(".confirm").on('click', function() {
         let $currentKey = $(this).data('key');
         let $trainName = $(this).closest("tr").children(".trainName").children("input").val();
@@ -153,7 +150,8 @@ $("#trainTable").on('click', ".update", function() {
 
         database.ref($currentKey).update(updates);
 
-        startInterval();
+        updateAll() //update data//
+        timer = window.setInterval(updateAll, 20 * 1000); //restart the timer//
         
     })
 
@@ -162,7 +160,7 @@ $("#trainTable").on('click', ".update", function() {
 
 
 
-
+//CLEAR button action//
 $("#trainTable").on('click', ".clear", function() {
     let key = $(this).data('key');
     database.ref().child(key).remove();
@@ -171,6 +169,7 @@ $("#trainTable").on('click', ".clear", function() {
 });
 
 
+//Add new Train button
 
 $("#submitTable").on('click', function() {
 
