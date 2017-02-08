@@ -1,5 +1,5 @@
 function startInterval() {
-    let timer = window.setInterval(updateAll, 20 * 1000); //update information every 60 seconds
+    timer = window.setInterval(updateAll, 20 * 1000); //update information every 60 seconds
     console.log("interval started");
 }
 
