@@ -1,7 +1,7 @@
 
 
-
-
+let timer = window.setInterval(updateAll, 20 * 1000); //update information every 60 seconds
+$('.toggleView').hide();
 let loggedIn = false;
 
 
@@ -58,11 +58,19 @@ $('#test').on('click', function() {
 
 
 
+updateAll(); //display info on initial page load
 
 
+function updateAll() {
 
 
-database.ref().on("child_added", function(childSnapshot) {
+    $(".trainData").remove(); //remove existing rows since appending
+    console.log("interval running");
+
+    database.ref().on('value', function(snapshot) {
+
+        snapshot.forEach(function(childSnapshot) {
+
           //Moment JS
 
             let tFrequency = childSnapshot.val().frequency;
@@ -91,7 +99,7 @@ database.ref().on("child_added", function(childSnapshot) {
                 "<td class='buttonSpace'><button type='button' data-key='" + childSnapshot.key + "' class='btn-xs btn-warning update updateStyle'>Update</button><button type='button' data-key='" + childSnapshot.key + "' class='btn-xs btn-danger clear'>Clear</button></td></tr>");
             
             //Used to hide features until logged in
-            
+            $(".buttonSpace").hide();
             if (loggedIn) {
                 $(".buttonSpace").show();
             }
@@ -99,7 +107,8 @@ database.ref().on("child_added", function(childSnapshot) {
 
         });
 
- 
+    });
+}
 
 
 //UPDATE button action//
@@ -117,7 +126,7 @@ $("#trainTable").on('click', ".update", function() {
         $(this).append($newInput.val(currentContent)); //add saved text to input box (not as placeholder!)
     });
 
-    
+    clearInterval(timer); //stop the table from refreshing while editing
    
 //Save all new input data to object, then update object in Firebase
     $(".confirm").on('click', function() {
@@ -141,7 +150,8 @@ $("#trainTable").on('click', ".update", function() {
 
         database.ref($currentKey).update(updates);
 
-       
+        updateAll() //update data//
+        timer = window.setInterval(updateAll, 20 * 1000); //restart the timer//
         
     })
 
@@ -155,7 +165,7 @@ $("#trainTable").on('click', ".clear", function() {
     let key = $(this).data('key');
     database.ref().child(key).remove();
     $(this).closest("tr").remove();
-
+    updateAll();
 });
 
 
@@ -184,6 +194,6 @@ $("#submitTable").on('click', function() {
     $("#inputFirstTrainTime").val("");
     $("#inputFrequency").val("");
 
-   
+    updateAll(); //don't wait for interval, update info now
 
 });
