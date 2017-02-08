@@ -134,7 +134,17 @@ $("#trainTable").on('click', ".update", function() {
         let $trainName = $(this).closest("tr").children(".trainName").children("input").val();
         let $destination = $(this).closest("tr").children(".destination").children("input").val();
         let $frequency = $(this).closest("tr").children(".frequency").children("input").val();
+        let regExp2 = new RegExp("[1-9][0-9]{0,2}");
+         let regExp3 = new RegExp("^(?!\s*$).+");
 
+
+        if(!regExp3.test($trainName)){
+        return;
+      }else if (!regExp3.test($destination)){
+        return;
+      }else if(!regExp2.test($frequency)) {
+          return;
+        }
 
 
 
@@ -160,6 +170,9 @@ $("#trainTable").on('click', ".update", function() {
 
 
 
+
+
+
 //CLEAR button action//
 $("#trainTable").on('click', ".clear", function() {
     let key = $(this).data('key');
@@ -172,12 +185,36 @@ $("#trainTable").on('click', ".clear", function() {
 //Add new Train button
 
 $("#submitTable").on('click', function() {
-
+   event.preventDefault();
+  $(".errorBox").html("");
     //save form input values
     let tName = $("#inputTrainName").val().trim();
     let dest = $("#inputDestination").val().trim();
     let firstTT = $("#inputFirstTrainTime").val().trim();
     let freq = $("#inputFrequency").val().trim();
+    let regExp = new RegExp("^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$");
+    let regExp2 = new RegExp("[1-9][0-9]{0,2}");
+    let regExp3 = new RegExp("^(?!\s*$).+");
+
+
+      if(!regExp3.test(tName)){
+        $(".errorBox").html("Please enter a train name");
+        $("#inputTrainName").focus();
+        return;
+      }else if (!regExp3.test(dest)){
+        $(".errorBox").html("Please enter a destination");
+        $("#inputDestination").focus();
+        return;
+      }else if(!regExp.test(firstTT)) {
+        $(".errorBox").html("Please enter a proper starting time in HH:mm format");
+        $("#inputFirstTrainTime").focus();
+        return;
+      }else if(!regExp2.test(freq)){
+          $(".errorBox").html("Please enter a proper frequency");
+          $("#inputFrequency").focus();
+          return;
+        }
+      
 
     let newTrain = {
         trainName: tName,
@@ -193,6 +230,10 @@ $("#submitTable").on('click', function() {
     $("#inputDestination").val("");
     $("#inputFirstTrainTime").val("");
     $("#inputFrequency").val("");
+    
+    
+
+    
 
     updateAll(); //don't wait for interval, update info now
 
