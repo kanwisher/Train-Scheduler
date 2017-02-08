@@ -1,6 +1,6 @@
 
 
-let timer = window.setInterval(updateAll, 20 * 1000); //update information every 60 seconds
+let timer = window.setInterval(updateAll, 10 * 1000); //update information every 10 seconds
 $('.toggleView').hide();
 let loggedIn = false;
 
@@ -161,7 +161,7 @@ $("#trainTable").on('click', ".update", function() {
         database.ref($currentKey).update(updates);
 
         updateAll() //update data//
-        timer = window.setInterval(updateAll, 20 * 1000); //restart the timer//
+        timer = window.setInterval(updateAll, 10 * 1000); //restart the timer//
         
     })
 
