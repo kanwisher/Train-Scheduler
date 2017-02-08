@@ -1,8 +1,8 @@
 
 
-let timer = window.setInterval(updateAll, 5 * 1000); //update information every 60 seconds
-
-
+const timer = window.setInterval(updateAll, 20 * 1000); //update information every 60 seconds
+$('.toggleView').hide();
+let loggedIn = false;
   // Initialize Firebase
   const config = {
     apiKey: "AIzaSyAjoRvpZ7YCCINdxtFnQ5G4uEG16-1tqGg",
@@ -20,7 +20,7 @@ var provider = new firebase.auth.GoogleAuthProvider();
 
 
 
-function googleLogin(){
+$('#test').on('click', function (){
 
 firebase.auth().signInWithPopup(provider).then(function(result) {
   // This gives you a Google Access Token. You can use it to access the Google API.
@@ -30,6 +30,9 @@ firebase.auth().signInWithPopup(provider).then(function(result) {
 
   console.log(user);
   
+  loggedIn = true;
+      $('button').show();
+     $('.toggleView').show();
   // ...
 }).catch(function(error) {
   // Handle Errors here.
@@ -43,10 +46,7 @@ firebase.auth().signInWithPopup(provider).then(function(result) {
 });
 
 }
-
-$("#test").on('click', function(){
- googleLogin();
-})
+});
 
 
 
@@ -54,6 +54,7 @@ updateAll(); //display info on initial page load
 
 
 function updateAll(){
+
 
 $(".trainData").remove(); //remove existing rows since appending
 console.log("interval running");
@@ -88,14 +89,17 @@ console.log("interval running");
   		"<td>" + moment(nextTrain).format("LT") + "</td>" +
   		"<td>" + tMinutesTillTrain + "</td>" +
       "<td class='buttonSpace'><button type='button' data-key='" + childSnapshot.key + "' class='btn-xs btn-warning update updateStyle'>Update</button><button type='button' data-key='" + childSnapshot.key + "' class='btn-xs btn-danger clear'>Clear</button></td></tr>");
-
-	
+$("button").hide();
+	if(loggedIn){
+    $("button").show();
+  }
 
 
   });
 
 });
 }
+
 
 
 $("#trainTable").on('click', ".update", function() {

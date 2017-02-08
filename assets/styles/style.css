@@ -35,14 +35,20 @@ body {
 }
 
 
-
 .buttonSpace {
 	width: 130px;
 }
 
 
-@media (max-width: @screen-xs-max) {
-#tracks {
-display: none;
-	} 
+
+
+
+
+#test {
+	display: block;
+	width: 200px
+}
+
+#test:hover {
+	width: 202px;
 }
