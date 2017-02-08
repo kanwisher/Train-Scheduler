@@ -1,3 +1,7 @@
+* {
+	box-sizing: border-box;
+}
+
 body {
 	background-color: #0a385f;
 }
@@ -10,3 +14,29 @@ body {
 .jumbotron h1 {
 	color: white;
 }
+
+.btn-xs:focus {
+  outline: none;
+}
+
+.updateStyle {
+	margin-right: 4px;
+	width: 55px;
+	height: 24px;
+}
+
+.clear {
+	width: 55px;
+}
+
+.tableInput {
+	width: 125px;
+
+}
+
+
+}
+.buttonSpace {
+	width: 130px;
+}
+

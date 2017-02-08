@@ -1,6 +1,6 @@
 
 
-setInterval(updateAll, 60 * 1000); //update information every 60 seconds
+let timer = window.setInterval(updateAll, 5 * 1000); //update information every 60 seconds
 
 
   // Initialize Firebase
@@ -24,7 +24,7 @@ updateAll(); //display info on initial page load
 function updateAll(){
 
 $(".trainData").remove(); //remove existing rows since appending
-
+console.log("interval running");
 
   database.ref().on('value', function(snapshot) {
 
@@ -50,11 +50,12 @@ $(".trainData").remove(); //remove existing rows since appending
   
     //for each child, append new row of data
   	$("#trainTable").append(
-  		"<tr class='trainData'><td>" + childSnapshot.val().trainName + "</td>" +
-  		"<td>" + childSnapshot.val().destination + "</td>" +
-  		"<td>" + childSnapshot.val().frequency + "</td>" +
+  		"<tr class='trainData'><td class='edit trainName'>" + childSnapshot.val().trainName + "</td>" +
+  		"<td class='edit destination'>" + childSnapshot.val().destination + "</td>" +
+  		"<td class='edit frequency'>" + childSnapshot.val().frequency + "</td>" +
   		"<td>" + moment(nextTrain).format("LT") + "</td>" +
-  		"<td>" + tMinutesTillTrain + "</td></tr>");
+  		"<td>" + tMinutesTillTrain + "</td>" +
+      "<td class='buttonSpace'><button type='button' data-key='" + childSnapshot.key + "' class='btn-xs btn-warning update updateStyle'>Update</button><button type='button' data-key='" + childSnapshot.key + "' class='btn-xs btn-danger clear'>Clear</button></td></tr>");
 
 	
 
@@ -65,6 +66,58 @@ $(".trainData").remove(); //remove existing rows since appending
 }
 
 
+$("#trainTable").on('click', ".update", function() {
+  $(this).text("Confirm");
+  $(this).removeClass('btn-warning update');
+  $(this).addClass('btn-success confirm');
+  let $editables = $(this).closest("tr").children(".edit");
+
+    $editables.each(function(index){
+      let currentContent = $(this).text()
+      $(this).text("");
+      let $newInput = $("<input class='tableInput' type='text'/>");
+      $(this).append($newInput.val(currentContent));
+      clearInterval(timer);
+      
+    });
+
+  $(".confirm").on('click', function() {
+    let $currentKey = $(this).data('key');
+    let $trainName = $(this).closest("tr").children(".trainName").children("input").val();
+    let $destination = $(this).closest("tr").children(".destination").children("input").val();
+    let $frequency = $(this).closest("tr").children(".frequency").children("input").val();
+    
+      
+     
+  
+    var updates = {};
+    
+    updates = {
+    
+      trainName : $trainName,
+      destination: $destination,
+      frequency : $frequency
+
+    };
+
+    database.ref($currentKey).update(updates);
+     
+
+    updateAll();
+  })
+
+});
+
+
+
+
+
+$("#trainTable").on('click', ".clear", function() {
+  let key = $(this).data('key');
+  database.ref().child(key).remove();
+  $(this).closest("tr").remove();
+  updateAll();
+});
 
 
 
