@@ -154,7 +154,7 @@ $("#trainTable").on('click', ".update", function() {
         database.ref($currentKey).update(updates);
 
         startInterval();
-        updateAll();
+        
     })
 
 });
