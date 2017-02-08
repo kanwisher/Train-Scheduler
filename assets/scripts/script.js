@@ -40,10 +40,17 @@ firebase.auth().signInWithPopup(provider).then(function(result) {
   // ...
 });
 
-$("#test").on('click', function(){
-    firebase.auth().signInWithRedirect(provider);
-  });
+function googleSignOut(){
+firebase.auth().signOut().then(function() {
+  // Sign-out successful.
+}, function(error) {
+  // An error happened.
+});
+}
 
+$("#test").on('click', function(){
+  googleSignOut();
+})
 
 
 
