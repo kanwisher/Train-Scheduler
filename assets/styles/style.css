@@ -35,8 +35,14 @@ body {
 }
 
 
-}
+
 .buttonSpace {
 	width: 130px;
 }
 
+
+@media (max-width: @screen-xs-max) {
+#tracks {
+display: none;
+	} 
+}
