@@ -54,3 +54,7 @@ body {
 #test:hover {
 	cursor: pointer;
 }
+
+.errorBox {
+	margin-top: 5px;
+}
