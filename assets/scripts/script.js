@@ -42,9 +42,9 @@ firebase.auth().signInWithPopup(provider).then(function(result) {
 
 function googleSignOut(){
 firebase.auth().signOut().then(function() {
-  // Sign-out successful.
+  console.log("Sign-out success");// Sign-out successful.
 }, function(error) {
-  // An error happened.
+  console.log(error);
 });
 }
 
