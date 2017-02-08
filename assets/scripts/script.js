@@ -1,6 +1,6 @@
 
 
-let timer = window.setInterval(updateAll, 20 * 1000); //update information every 60 seconds
+
 $('.toggleView').hide();
 let loggedIn = false;
 
@@ -58,19 +58,12 @@ $('#test').on('click', function() {
 
 
 
-updateAll(); //display info on initial page load
 
 
-function updateAll() {
 
 
-    $(".trainData").remove(); //remove existing rows since appending
-    console.log("interval running");
 
-    database.ref().on('value', function(snapshot) {
-
-        snapshot.forEach(function(childSnapshot) {
-
+database.ref().on("child_added", function(childSnapshot) {
           //Moment JS
 
             let tFrequency = childSnapshot.val().frequency;
@@ -107,8 +100,8 @@ function updateAll() {
 
         });
 
-    });
-}
+ 
+
 
 
 //UPDATE button action//
@@ -150,8 +143,7 @@ $("#trainTable").on('click', ".update", function() {
 
         database.ref($currentKey).update(updates);
 
-        updateAll() //update data//
-        timer = window.setInterval(updateAll, 20 * 1000); //restart the timer//
+       
         
     })
 
@@ -165,7 +157,7 @@ $("#trainTable").on('click', ".clear", function() {
     let key = $(this).data('key');
     database.ref().child(key).remove();
     $(this).closest("tr").remove();
-    updateAll();
+
 });
 
 
@@ -194,6 +186,6 @@ $("#submitTable").on('click', function() {
     $("#inputFirstTrainTime").val("");
     $("#inputFrequency").val("");
 
-    updateAll(); //don't wait for interval, update info now
+   
 
 });
