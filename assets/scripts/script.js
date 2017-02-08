@@ -20,13 +20,15 @@ var provider = new firebase.auth.GoogleAuthProvider();
 
 
 
-
+function googleLogin(){
 
 firebase.auth().signInWithPopup(provider).then(function(result) {
   // This gives you a Google Access Token. You can use it to access the Google API.
   var token = result.credential.accessToken;
   // The signed-in user info.
   var user = result.user;
+
+  console.log(user);
   
   // ...
 }).catch(function(error) {
@@ -40,16 +42,10 @@ firebase.auth().signInWithPopup(provider).then(function(result) {
   // ...
 });
 
-function googleSignOut(){
-firebase.auth().signOut().then(function() {
-  console.log("Sign-out success");// Sign-out successful.
-}, function(error) {
-  console.log(error);
-});
 }
 
 $("#test").on('click', function(){
-  googleSignOut();
+ googleLogin();
 })
 
 
